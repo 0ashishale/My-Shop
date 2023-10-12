@@ -7,7 +7,8 @@ const router = require('express').Router();
 
 const passport = require('passport')
 
-const {isAuthenticated} = require('../../middleware/auth')
+const {isAuthenticated} = require('../../middleware/auth');
+const Errorhandler = require('../../utils/errorHandler');
 
 //google auth
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
@@ -65,8 +66,10 @@ router.post('/login', (req, res, next) => {
       return res.status(401).json({ message: info.message });
     }
 
-    // If authentication is successful, you can log in the user, set a session, or generate a token.
-    // For example, if using session-based authentication:
+    if(!user.verified){
+      return next(new Errorhandler(`Please check your gmail and verify your email`, 401))
+    }
+
     req.logIn(user, (err) => {
       if (err) {
         return res.status(500).json({ message: 'An error occurred during login.' });

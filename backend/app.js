@@ -73,6 +73,17 @@ app.use('/api', userRoute)
 const productRoute = require('./api/Product/productRoute')
 app.use('/api', productRoute)
 
+//like route
+const likeRoute = require('./api/Like/likeRoute')
+app.use('/api', likeRoute)
+
+//order route
+const orderRoute = require('./api/Order/orderRoute')
+app.use('/api', orderRoute)
+
+//otp route
+const otpRoute = require('./api/OTP/otpRoute')
+app.use('/api', otpRoute)
 
 //errormiddleware
 const errormiddleware = require('./middleware/error')

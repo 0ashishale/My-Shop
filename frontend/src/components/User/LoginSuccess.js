@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { loadUser } from '../../redux/action/userAction'
 
 const LoginSuccess = () => {
 
+  const dispatch = useDispatch()
     
     useEffect(()=>{
       setTimeout(()=>{
             window.close();
-            
-            
-      }, 1000)
-    })
+            dispatch(loadUser())
+      }, 300)
+    }, [])
   return (
     <div>LoginSuccess</div>
   )

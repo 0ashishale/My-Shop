@@ -19,6 +19,21 @@ import {
   UPDATE_PROFILE_FAIL,
   UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
+  LIKED_PRODUCTS_REQUEST,
+  LIKED_PRODUCTS_FAIL,
+  LIKED_PRODUCTS_SUCCESS,
+  LIKE_REQUEST,
+  LIKE_SUCCESS,
+  LIKE_FAIL,
+  GENERATE_OTP_REQUEST,
+  GENERATE_OTP_SUCCESS,
+  GENERATE_OTP_FAIL,
+  VERIFY_OTP_REQUEST,
+  VERIFY_OTP_SUCCESS,
+  VERIFY_OTP_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAIL
 } from "../constants/userConstants";
 
 export const register = (userData) => async (dispatch) => {
@@ -67,7 +82,7 @@ export const login = (email, password) => async (dispatch) => {
       payload: data.user,
     });
   } catch (error) {
-    console.log(error);
+   
     dispatch({
       type: LOGIN_USER_FAIL,
       payload: error.response.data.message,
@@ -82,13 +97,13 @@ export const loadUser = () => async (dispatch) => {
     dispatch({ type: LOAD_USER_REQUEST });
 
     const { data } = await axios.get("/api/auth/user");
-    console.log(data.user);
+    
     dispatch({
       type: LOAD_USER_SUCCESS,
       payload: data.user,
     });
   } catch (error) {
-    console.log(error);
+    
     dispatch({
       type: LOAD_USER_FAIL,
       payload: error.response.data.message,
@@ -146,7 +161,8 @@ export const updateProfile = (id, userData) => async (dispatch) => {
 
 //UPDATE PASSWORD
 
-export const updateUserPassword = (id, oldPassword, newPassword)=> async (dispatch)=>{
+export const updateUserPassword = (oldPassword, newPassword)=> async (dispatch)=>{
+  
     try {
         dispatch({type : UPDATE_PASSWORD_REQUEST})
 
@@ -154,7 +170,7 @@ export const updateUserPassword = (id, oldPassword, newPassword)=> async (dispat
             headers :{ "Content-Type":"application/json"}
         }
 
-        const {data} = await axios.put(`/api/update-password/${id}`, oldPassword, newPassword, config);
+        const {data} = await axios.put(`/api/update-password`, {oldPassword, newPassword}, config);
 
         dispatch({
             type : UPDATE_PASSWORD_SUCCESS,
@@ -167,4 +183,110 @@ export const updateUserPassword = (id, oldPassword, newPassword)=> async (dispat
             payload : error.response.data.message
         })
     }
+}
+
+
+//GET LIKED PRODUCTS
+export const getLikedProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: LIKED_PRODUCTS_REQUEST });
+
+    const { data } = await axios.get("/api/liked-products");
+
+    dispatch({
+      type: LIKED_PRODUCTS_SUCCESS,
+      payload: data.likedProducts,
+    });
+  } catch (error) {
+    dispatch({
+      type: LIKED_PRODUCTS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+//like request
+
+export const likeProduct =(productId) => async(dispatch)=>{
+  try {
+    dispatch({
+      type : LIKE_REQUEST
+    })
+
+    const config = {headers : {"Content-Type": "application/json"}}
+
+    const {data} = await axios.post('/api/like', {productId}, config)
+
+    dispatch({
+      type : LIKE_SUCCESS,
+      payload : data.liked
+    })
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type : LIKE_FAIL,
+      payload : error.response.data.message
+    })
+  }
+}
+
+
+//GENERATE OTP 
+
+export const generateOtp = (email)=>async (dispatch)=>{
+  try {
+    dispatch({type : GENERATE_OTP_REQUEST})
+    const config = {headers : {"Content-Type": "application/json"}}
+    const {data} = await axios.post('/api/email-verification', {email}, config)
+
+    dispatch({
+      type : GENERATE_OTP_SUCCESS,
+      payload : data.success
+    })
+  } catch (error) {
+    dispatch({
+      type  : GENERATE_OTP_FAIL,
+      error : error.response.data.message
+    })
+  }
+}
+
+//verify otp
+
+export const verifyOtp = (email, otp)=> async (dispatch)=>{
+  try {
+    dispatch({
+      type : VERIFY_OTP_REQUEST
+    })
+    const config = {headers : {"Content-Type": "application/json"}}
+    const {data} = await axios.post('/api/verify', {email, otp}, config)
+    dispatch({
+      type : VERIFY_OTP_SUCCESS,
+      payload : data.success
+    })
+  } catch (error) {
+    dispatch({
+      type : VERIFY_OTP_FAIL,
+      payload : error.response.data.message
+    })
+  }
+}
+
+export const resetPassword = (email, password, otp) => async(dispatch)=>{
+  try {
+    dispatch({type : RESET_PASSWORD_REQUEST})
+
+    const config = {headers : {"Content-Type": "application/json"}}
+    const {data} = await axios.post('/api/reset-password', {email, password, otp}, config)
+    dispatch({
+      type : RESET_PASSWORD_SUCCESS,
+      payload : data.success
+    })
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type : RESET_PASSWORD_FAIL,
+      payload : error.response.data.message
+    })
+  }
 }

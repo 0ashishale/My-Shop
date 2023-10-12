@@ -60,7 +60,7 @@ async function(accessToken, refreshToken, profile, cb) {
     const user = await User.findOne({'provider.userId' : profile.id})
 
     if(user){
-      console.log( `user is already present.`)
+    
       cb(null, user)
     }else{
       const defaultUser = {
@@ -73,14 +73,13 @@ async function(accessToken, refreshToken, profile, cb) {
 
       const newUser = await User.create(defaultUser);
       if(newUser){
-        console.log(`User Created Successfully`)
         return cb(null, newUser)
       }
       
     }
     
   } catch (error) {
-   console.log(error);
+  
    cb(error, null) 
   }
 }

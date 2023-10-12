@@ -115,6 +115,7 @@ exports.register = async (req, res, next) => {
       );
     }
 
+    
     const newUser = await User.create({
       name,
       email,
@@ -242,7 +243,7 @@ exports.updateUserProfile = async (req, res, next) => {
     res.status(201).json({
       success: true,
       message: `User Updated.`,
-      updated,
+    
     });
   } catch (error) {
     console.log(error);
@@ -252,6 +253,9 @@ exports.updateUserProfile = async (req, res, next) => {
 
 //change password
 exports.updatePassword = async (req, res, next) => {
+  if(!req.body.newPassword || !req.body.oldPassword){
+    return next(new Errorhandler(`Old and new both password are required`, 400))
+  }
   try {
     const user = await User.findById(req.user.id).select("+password");
 
@@ -279,3 +283,5 @@ exports.updatePassword = async (req, res, next) => {
     next(new Errorhandler(`${error.message}`, 500));
   }
 };
+
+

@@ -52,6 +52,13 @@ const UserSchema = new mongoose.Schema(
       required: true,
       default: "user",
     },
+    token :{
+        type : String
+    },
+    verified : {
+      type : Boolean,
+      default : false
+    },
 
     resetPasswordToken: String,
     resetTokenExpires: Date,
@@ -62,6 +69,9 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre('save', async function(next){
   if(!this.isModified('password')){
           next();
+  }
+  if(!this.password){
+    return next(new Error(`Password is required`))
   }
   this.password = await bcrypt.hash(this.password, 10)
 })

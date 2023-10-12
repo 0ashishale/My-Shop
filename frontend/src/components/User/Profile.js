@@ -80,7 +80,7 @@ const Profile = () => {
   }, [dispatch, alert, isUpdated, error, user]);
   return (
     <div>
-      <div className="Frame2 md:w-[90%] mx-auto h-96">
+      <div className="Frame2 md:w-[90%] mx-auto">
         <div className="AshishSProfile text-center mt-10 mb-10  text-black text-4xl font-normal font-['Inter'] underline">
           {user?.name}’s Profile
         </div>
@@ -198,7 +198,7 @@ const Profile = () => {
             <div className="flex flex-col gap-4">
               <div className="Frame5 bg-violet-900 rounded-lg justify-center items-center gap-2.5 inline-flex">
                 <div className="MyOrders py-1 text-white text-base font-normal font-['Inter']">
-                  <Link to='/my-orders'>My Orders</Link> 
+                  <Link to={`/orders`}>My Orders</Link> 
                 </div>
               </div>
               <div className={`Frame6 bg-violet-900 rounded-lg justify-center items-center gap-2.5 inline-flex ${user?.provider ? 'hidden' : ''}`}>

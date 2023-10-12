@@ -7,6 +7,12 @@ const {
   deleteImage,
   deleteProductImage,
   getFeaturedProducts,
+  createProductReview,
+  likeProduct,
+  toggleLike,
+  createQuestion,
+  createAnswer,
+  deleteQuestionAns,
 } = require("./productController");
 
 const router = require("express").Router();
@@ -26,6 +32,16 @@ router
 router.put("/update-product/:id", updateProduct);
 router.delete('/product/:productId/image/:imageId', deleteProductImage);
 router.delete('/product/:productId/image/:imageId', deleteProduct);
-router.get('/featured/product', getFeaturedProducts)
+router.get('/featured/products', getFeaturedProducts)
+router.put('/product/like',isAuthenticated, toggleLike)
+
+//review
+router.put('/review', isAuthenticated, createProductReview)
+
+
+//question
+router.put('/product/question',isAuthenticated, createQuestion)
+router.put('/product/answer',  createAnswer)
+router.delete('/product/question/:id', deleteQuestionAns)
 
 module.exports = router;

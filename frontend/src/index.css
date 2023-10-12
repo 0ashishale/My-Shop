@@ -17,6 +17,16 @@
     background-color: #fff !important;
 }
 
+.MuiDataGrid-columnHeader {
+  background-color: tomato;
+  
+}
+
+.MuiDataGrid-columnHeader div {
+  color: rgb(255, 255, 255);
+  font: 500 1.1vmax "Roboto" !important;
+}
+
 @layer components {
   .all-\[unset\] {
     all: unset;
@@ -27,3 +37,19 @@
   --variable-collection-button-color: rgba(79, 45, 153, 1);
   --variable-collection-font-color: rgba(72, 107, 82, 1);
 }
+
+/* In your CSS or SCSS file */
+/* Customize the font size for the React-Alert notifications */
+.react-alert {
+  font-size: 16px; /* Adjust the font size as needed */
+}
+
+/* Optionally, you can style the title and message separately */
+.react-alert-title {
+  font-size: 18px; /* Font size for the alert title */
+}
+
+.react-alert-message {
+  font-size: 14px; /* Font size for the alert message */
+}
+

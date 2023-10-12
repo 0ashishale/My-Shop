@@ -8,9 +8,7 @@ exports.isAuthenticated = (req, res, next) => {
         return next();
     }
 
-    return res.status(401).json({
-        message : `Please login to access this resource`
-    })
+   return next(new Errorhandler(`Please login to access.`, 400))
 };
 
 exports.authorizedRole = (...roles) => {

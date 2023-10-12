@@ -28,10 +28,13 @@ const deleteProductHandler = (id)=>{
   
 }
 
+useEffect(()=>{
+  dispatch(getAdminProducts())
+}, [])
 
 
 useEffect(()=>{
-  dispatch(getAdminProducts())
+  
 
     if(error){
       alert.error(error)
@@ -54,12 +57,15 @@ useEffect(()=>{
         headerName : "Images",
         editable : false,
         sortable : false,
-        width : 250,
-        renderCell: ({ value }) => (
-          value.map((item)=>(
-            <img src={item.url} alt="Product" style={{ maxWidth: '100%', width: '80px', maxHeight: '100px' , display :''}} />
-          ))
-        ),
+        width : 100,
+        renderCell: ({ value }) => {
+          return (
+              <div className="overflow-x-auto flex gap-1">
+            {value.map((item)=>(
+              <img src={item.url} alt="Product" style={{ maxWidth: '100%', width: '100px',  maxHeight: '100px'}} />
+            ))}</div>
+          )
+            },
         
 
     },
@@ -68,13 +74,32 @@ useEffect(()=>{
       field: 'name',
       headerName: 'Name',
       width: 150,
+      renderCell : (params)=>{
+        const {value, row} = params
+        return (
+          <Link to={`/product/${row.id}`}>
+          <p className="overflow-x-auto">{value}</p>
+          </Link>
+        )
+      }
       
     
     },
     {
+      field : 'category',
+      headerName : 'Category',
+      width : 80,
+      
+    },
+    {
+      field : 'rating',
+      headerName : "Ratings",
+      width : 80
+    },
+    {
       field: 'stock',
       headerName: 'Stock',
-      width: 100,
+      width: 80,
       editable : true
       
     },
@@ -82,19 +107,20 @@ useEffect(()=>{
       field: 'price',
       headerName: 'Price',
       sortable: false,
-      width: 100,
+      width: 80,
+      renderCell : ({value})=>{
+        return (
+            <b>Rs.{value}</b>
+        )
+      }
       
       
     },
-    {
-      field: 'category',
-      headerName: 'Category',
-      width: 100,
-    },
+
     {
       field : 'featured',
       headerName : 'Featured',
-      width :100
+      width :80
     },
 
     {
@@ -108,6 +134,9 @@ useEffect(()=>{
 
             return (
                 <>
+                  <Link>
+
+                  </Link>
                     <Link to={`/admin/product/${row.id}`}>
                         <EditIcon />
                     </Link>
@@ -132,7 +161,9 @@ useEffect(()=>{
       price : i.price,
       category : i.category,
       images : i.images,
-      featured : i.featured
+      featured : i.featured,
+      rating : i.ratings
+      
     })
   });
 

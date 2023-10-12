@@ -72,8 +72,18 @@ const UpdateProduct = () => {
   };
   const handleRadioChange = (e) => {
     setFeatured(e.target.value);
+    console.log(featured);
   };
-
+  const handleDeleteImage = (indexToDelete) => {
+    // Filter out the image to delete based on its index
+    const updatedImagesPreview = imagesPreview.filter(
+      (_, index) => index !== indexToDelete
+    );
+  
+    // Update the state to reflect the changes
+    setImagesPreview(updatedImagesPreview);
+  };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const productData = new FormData();
@@ -115,7 +125,7 @@ const UpdateProduct = () => {
 
     if (isUpdated) {
       alert.success("Product Updated.");
-      dispatch({type : UPDATE_PRODUCT_RESET})
+      dispatch({ type: UPDATE_PRODUCT_RESET });
       navigate("/admin/products");
     }
     if (isDeleted) {
@@ -213,12 +223,12 @@ const UpdateProduct = () => {
           <div className="flex items-center  focus:border-4 border-2 md:w-[50%] mx-auto border-green-400 rounded px-3 py-2 gap-2">
             <FeaturedPlayListIcon size={30} className="" />
             <div className="flex flex-row gap-3 px-1 py-2 ">
-              <h3>Feature this product? </h3>
+              <h3>Feature this product? </h3> 
               <label className="text-xl cursor-pointer">
                 <input
                   type="radio"
                   value="true"
-                  checked={featured === true}
+                  checked={featured == 'true'}
                   onChange={handleRadioChange}
                 />
                 Yes
@@ -227,7 +237,7 @@ const UpdateProduct = () => {
                 <input
                   type="radio"
                   value="false"
-                  checked={featured === false}
+                  checked={featured == 'false'}
                   onChange={handleRadioChange}
                 />
                 No
@@ -237,7 +247,6 @@ const UpdateProduct = () => {
           <div className="flex items-center focus:border-4 border-2 md:w-[50%] mx-auto border-green-400 rounded px-3 py-2 gap-2">
             <AddAPhotoIcon size={30} className="" />
             <input
-             
               className="w-full px-1 py-2 rounded"
               type="file"
               multiple
@@ -254,7 +263,7 @@ const UpdateProduct = () => {
             Update Product
           </button>
 
-          <div className="flex flex-row overflow-x-auto">
+          {/* <div className="flex flex-row overflow-x-auto">
             {imagesPreview &&
               imagesPreview.map((image, index) => (
                 <img
@@ -264,7 +273,25 @@ const UpdateProduct = () => {
                   className="w-28 h-24"
                 />
               ))}
+          </div> */}
+          <div className="flex flex-row overflow-x-auto">
+            { imagesPreview && imagesPreview.map((image, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={image}
+                  alt="Update Product Preview"
+                  className="w-28 h-24"
+                />
+                <button
+                  className="absolute top-0 right-0 text-white bg-red-500 hover:bg-red-600 p-1 rounded-full cursor-pointer"
+                  onClick={() => handleDeleteImage(index)}
+                >
+                  <MdDelete />
+                </button>
+              </div>
+            ))}
           </div>
+
           <div
             className="relative inline-block overflow-x-auto"
             onMouseEnter={() => setHovered(true)}
@@ -356,11 +383,11 @@ const Imagecard = ({ image }) => {
                   </button>
                 </div>
               )} */}
-        
+
       <div
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="relative" 
+        className="relative"
       >
         <img src={image.url} alt="Product Preview" className="w-28 h-24"></img>
         {hovered && (
@@ -374,7 +401,6 @@ const Imagecard = ({ image }) => {
           </div>
         )}
       </div>
-
     </>
   );
 };

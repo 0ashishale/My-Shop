@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux'
 import {useAlert} from 'react-alert'
-import { register } from "../../redux/action/userAction";
-import { CLEAR_ERRORS, REGISTER_USER_RESET } from "../../redux/constants/userConstants";
+import { generateOtp, register } from "../../redux/action/userAction";
+import { CLEAR_ERRORS, GENERATE_OTP_RESET, REGISTER_USER_RESET } from "../../redux/constants/userConstants";
 
 const SignUp = () => {
 
@@ -11,7 +11,7 @@ const SignUp = () => {
   const alert = useAlert();
   const navigate = useNavigate();
   const {user, error, success} = useSelector((state)=>state.user)
-
+const {isGenerated, loading} = useSelector(state=>state.otp)
   const [userData, setUserData] = useState({
     name : '',
     email : '',
@@ -36,13 +36,18 @@ const SignUp = () => {
 
   useEffect(()=>{
     if(success){
-      alert.success(`Registration successfully. Please login to processed`)
-      navigate('/auth/login')
+      alert.success(`Registration successfully. Please verify email to processed`)
+      dispatch(generateOtp(email))
+      navigate(`/auth/verify?email=${email}`)
       dispatch({type : REGISTER_USER_RESET})
     }
     if(error){
       alert.error(error)
       dispatch({type : CLEAR_ERRORS})
+    }
+    if(isGenerated){
+      alert.success(`Please check your email and verify.`)
+      dispatch({type : GENERATE_OTP_RESET})
     }
     
   }, [dispatch, error, alert, success])

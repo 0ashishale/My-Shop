@@ -2,8 +2,9 @@ import React, {useEffect, useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux'
 import axios from "axios";
-import { login } from "../../redux/action/userAction";
+import { generateOtp, login } from "../../redux/action/userAction";
 import { useAlert } from "react-alert";
+import { CLEAR_ERRORS } from "../../redux/constants/userConstants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const dispatch = useDispatch()
   const [password, setPassword] = useState('');
 
 const { isAuthenticated, error} = useSelector((state)=>state.user)
+const {isGenerated, error: otpError} = useSelector(state=>state.otp)
   const localSubmit = async(e)=>{
     e.preventDefault();
     dispatch(login(email, password))
@@ -25,8 +27,22 @@ const { isAuthenticated, error} = useSelector((state)=>state.user)
     }
     if(error){
       alert.error(error)
+      if(error === 'Please check your gmail and verify your email'){
+        navigate(`/auth/verify-email?email=${email}`)
+      }
+
+      dispatch({type : CLEAR_ERRORS})
     }
-  }, [isAuthenticated, alert, error])
+    if(isGenerated){
+      alert.success(`Please check your email to verify OTP`)
+      navigate(`/auth/reset-password?email=${email}`)
+    }
+    if(otpError){
+      alert.error(otpError)
+      dispatch({type : CLEAR_ERRORS})
+      
+    }
+  }, [isAuthenticated, alert, error, isGenerated])
 
   let timer = null;
   const handleGoogle = (e) => {
@@ -70,6 +86,14 @@ const { isAuthenticated, error} = useSelector((state)=>state.user)
         }
       });
     }
+  }
+
+  const forgotPasswordHandler = (e)=>{
+    if(!email){
+     return alert.error(`Please enter your Email address`)
+    }
+    dispatch(generateOtp(email))
+    
   }
   return (
     <div>
@@ -140,20 +164,20 @@ const { isAuthenticated, error} = useSelector((state)=>state.user)
                       />
                     </div>
                     <div className="ml-3 text-sm">
-                      <label
+                      {/* <label
                         for="remember"
                         className="text-gray-500 dark:text-gray-300"
                       >
                         Remember me
-                      </label>
+                      </label> */}
                     </div>
                   </div>
-                  <a
-                    href="#"
+                  <p
+                    onClick={forgotPasswordHandler}
                     className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     Forgot password?
-                  </a>
+                  </p>
                 </div>
 
                 <button
